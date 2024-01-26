@@ -28,7 +28,7 @@ There's a `Dockerfile` for the Node app in the root directory. We need to build 
 
 ## Use Docker Compose
 
-This works, but it's difficult to remember all these commands and flags! Using Docker Compose, we can configure all of our services in a single `compose.yaml` file and spin them up with a single command.
+This works, but it's difficult to remember all these commands and flags! Using Docker Compose, we can configure all of our services in a single `compose.yaml` file and spin them up with a single command. And even better, Docker Compose automatically adds the services to the same network.
 
 To build both images, we can run `docker compose build`. Then to spin everything up, we can run `docker compose up`. To tear everything down, we can run `docker compose down`.
 
