@@ -1,0 +1,17 @@
+services:
+    app:
+        build: ./
+        depends_on:
+            # Makes the postgres service start first, but we still need
+            # application-level code to make sure the service is actually ready.
+            - postgres
+        ports:
+            - 3000:3000
+    postgres:
+        build: ./db
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+volumes:
+    # By providing only the volume name, we are using the container engine's
+    # default configuration for creating a volume.
+    pgdata:
