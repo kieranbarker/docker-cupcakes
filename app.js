@@ -11,6 +11,9 @@ app.set("json spaces", "\t");
 app.use(morgan("dev"));
 app.use(express.json());
 
+// NOTE: all of the database queries should really be wrapped in try...catch
+// blocks, but for simplicity, they aren't.
+
 app.get("/cupcakes", async (req, res) => {
 	const { flavour } = req.query;
 
@@ -60,24 +63,20 @@ app.post("/cupcakes", async (req, res) => {
 });
 
 async function startServer() {
-	try {
-		const { open: isOpen } = await waitPort({
-			port: Number(process.env.PGPORT),
-			host: process.env.PGHOST,
-			timeout: 5000,
-		});
+	// NOTE: the call to `waitPort()` should really be wrapped in a try...catch
+	// block, but for simplicity, it isn't.
+	const { open: isOpen } = await waitPort({
+		port: Number(process.env.PGPORT),
+		host: process.env.PGHOST,
+		timeout: 5000,
+	});
 
-		if (!isOpen) {
-			console.log("The port did not open before the timeout...");
-			return;
-		}
-
-		app.listen(3000);
-	} catch (err) {
-		console.error(
-			`An unknown error occured while waiting for the port: ${err}`
-		);
+	if (!isOpen) {
+		console.log("The port did not open before the timeout...");
+		return;
 	}
+
+	app.listen(3000);
 }
 
 startServer();
