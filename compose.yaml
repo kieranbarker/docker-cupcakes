@@ -1,12 +1,19 @@
 services:
     app:
         build: ./
+        restart: on-failure
         depends_on:
             # Makes the postgres service start first, but we still need
             # application-level code to make sure the service is actually ready.
             - postgres
+        deploy:
+            replicas: 2  
+    nginx:
+        build: ./gateway
         ports:
-            - 3000:3000
+            - 80:80
+        depends_on:
+            - app
     postgres:
         build: ./db
         volumes:

@@ -62,6 +62,10 @@ app.post("/cupcakes", async (req, res) => {
 	res.status(201).json(cupcake);
 });
 
+app.get("/failure", (req, res) => {
+	throw Error("Error!");
+});
+
 async function startServer() {
 	// NOTE: the call to `waitPort()` should really be wrapped in a try...catch
 	// block, but for simplicity, it isn't.
