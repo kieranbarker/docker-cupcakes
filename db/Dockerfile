@@ -1,4 +1,4 @@
-FROM postgres:16.1
+FROM postgres:17
 
 ENV POSTGRES_USER=baker
 ENV POSTGRES_PASSWORD=muffins
