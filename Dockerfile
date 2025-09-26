@@ -1,7 +1,7 @@
-FROM node:20
+FROM node:22
 WORKDIR /home/node/cupcakes
 COPY package*.json .
-RUN npm install
+RUN npm ci
 COPY . .
 
 # "postgres" is the network alias for the Postgres container, meaning we don't

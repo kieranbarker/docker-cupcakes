@@ -6,33 +6,32 @@ const waitPort = require("wait-port");
 const db = require("./db");
 
 const app = express();
-app.set("json spaces", "\t");
 
 app.use(morgan("dev"));
 app.use(express.json());
 
-// NOTE: all of the database queries should really be wrapped in try...catch
-// blocks, but for simplicity, they aren't.
-
 app.get("/cupcakes", async (req, res) => {
 	const { flavour } = req.query;
+	let result;
 
 	if (flavour) {
-		var result = await db.query(
+		result = await db.query(
 			"SELECT * FROM cupcakes WHERE flavour ILIKE $1",
 			[`%${flavour}%`]
 		);
 	} else {
-		var result = await db.query("SELECT * FROM cupcakes");
+		result = await db.query("SELECT * FROM cupcakes");
 	}
 
-	const { rows: cupcakes } = result;
-	res.status(200).json(cupcakes);
+	res.status(200).json(result.rows);
 });
 
 app.get("/cupcakes/:id", async (req, res) => {
 	const { id } = req.params;
-	const result = await db.query("SELECT * FROM cupcakes WHERE id = $1", [id]);
+	const result = await db.query(
+		"SELECT * FROM cupcakes WHERE id = $1 LIMIT 1",
+		[id]
+	);
 
 	if (!result.rows.length) {
 		const error = "Cupcake not found";
@@ -40,8 +39,7 @@ app.get("/cupcakes/:id", async (req, res) => {
 		return;
 	}
 
-	const [cupcake] = result.rows;
-	res.status(200).json(cupcake);
+	res.status(200).json(result.rows[0]);
 });
 
 app.post("/cupcakes", async (req, res) => {
@@ -58,20 +56,17 @@ app.post("/cupcakes", async (req, res) => {
 		[flavour, instructions]
 	);
 
-	const [cupcake] = result.rows;
-	res.status(201).json(cupcake);
+	res.status(201).json(result.rows[0]);
 });
 
 async function startServer() {
-	// NOTE: the call to `waitPort()` should really be wrapped in a try...catch
-	// block, but for simplicity, it isn't.
-	const { open: isOpen } = await waitPort({
+	const { open } = await waitPort({
 		port: Number(process.env.PGPORT),
 		host: process.env.PGHOST,
 		timeout: 5000,
 	});
 
-	if (!isOpen) {
+	if (!open) {
 		console.log("The port did not open before the timeout...");
 		return;
 	}
