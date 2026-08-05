@@ -1,4 +1,4 @@
-FROM node:22
+FROM node:24
 WORKDIR /home/node/cupcakes
 COPY package*.json .
 RUN npm ci
