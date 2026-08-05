@@ -10,7 +10,7 @@ services:
     postgres:
         build: ./db
         volumes:
-            - pgdata:/var/lib/postgresql/data
+            - pgdata:/var/lib/postgresql
 volumes:
     # By providing only the volume name, we are using the container engine's
     # default configuration for creating a volume.
