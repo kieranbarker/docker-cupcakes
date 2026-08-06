@@ -17,7 +17,7 @@ By design, Docker containers are isolated from each other. In order for two cont
 There's a `Dockerfile` for the Postgres database in the `db` directory. We need to build the image and run a container. We'll put the container on the `cupcakes` network and give it a **network alias** that the other container can use instead of an IP address. We'll also mount the the `pgdata` volume to the `/var/lib/postgresql/data` directory in the container (where Postgres stores its data).
 
 1. `docker build ./db -t cupcakes-db`
-2. `docker run -d --network cupcakes --network-alias postgres -v pgdata:/var/lib/postgresql/data cupcakes-db`
+2. `docker run -d --network cupcakes --network-alias postgres -v pgdata:/var/lib/postgresql cupcakes-db`
 
 ## Build the Node image and run a container
 
